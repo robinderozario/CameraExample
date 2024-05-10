@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { Text, View, StyleSheet } from "react-native";
+import { CameraView, useCameraPermissions } from "expo-camera";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+	const [permission, requestPermission] = useCameraPermissions();
+
+	if (!permission) {
+		return <View />;
+	}
+	if (!permission.granted) {
+		return <Text>No access to camera</Text>;
+	}
+
+	// View the output and see that the interval does not effect the scanning frequency
+	const onBarcodeScanned = () => {
+		console.log(Date.now());
+	};
+
+	return (
+		<View style={styles.container}>
+			<CameraView
+				style={styles.camera}
+				facing={"back"}
+				onBarcodeScanned={onBarcodeScanned} // Note that phone heats up. If onBarcodeScanned = undefined, this is not the case
+				barcodeScannerSettings={{
+					barcodeTypes: ["ean13", "ean8", "upc_a"],
+					interval: 10,
+				}}
+			></CameraView>
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+	container: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	camera: {
+		width: "100%",
+		height: "100%",
+	},
 });
