@@ -22,10 +22,10 @@ export default function App() {
 			<CameraView
 				style={styles.camera}
 				facing={"back"}
-				onBarcodeScanned={onBarcodeScanned} // Note that phone heats up. If onBarcodeScanned = undefined, this is not the case
+				onBarcodeScanned={onBarcodeScanned}
 				barcodeScannerSettings={{
 					barcodeTypes: ["ean13", "ean8", "upc_a"],
-					interval: 10,
+					interval: 1000,
 				}}
 			></CameraView>
 		</View>
