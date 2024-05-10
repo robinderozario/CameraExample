@@ -8,26 +8,10 @@ export default function App() {
 	// permission is not updated when user accepts native permission modal (after fresh install)
 	useEffect(() => {
 		console.log("permission", permission);
-	}, []);
+	}, [permission]);
 
 	if (!permission) {
 		return <View />;
-	}
-
-	// Remove permission (in iOS settings) and try to press the button, it has no effect on iOS
-	if (!permission.granted) {
-		return (
-			<View
-				style={{
-					flex: 1,
-					justifyContent: "center",
-					alignItems: "center",
-				}}
-			>
-				<Text>No access to camera</Text>
-				<Button onPress={requestPermission} title="Give permission" />
-			</View>
-		);
 	}
 
 	// View the output and see that the interval does not effect the scanning frequency
@@ -45,7 +29,23 @@ export default function App() {
 					barcodeTypes: ["ean13", "ean8", "upc_a"],
 					interval: 1000,
 				}}
-			></CameraView>
+			>
+				{!permission.granted ? (
+					<View
+						style={{
+							flex: 1,
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
+						<Text>No access to camera</Text>
+						<Button
+							onPress={requestPermission}
+							title="Give permission"
+						/>
+					</View>
+				) : null}
+			</CameraView>
 		</View>
 	);
 }
